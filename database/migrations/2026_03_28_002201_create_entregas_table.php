@@ -6,20 +6,21 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('entregas', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('tarea_id')->constrained()->onDelete('cascade');
+            $table->foreignId('alumno_id')->constrained('usuarios')->onDelete('cascade');
+            $table->string('archivo_pdf');
+            $table->text('comentario')->nullable();
+            $table->enum('estado', ['entregado', 'revisado'])->default('entregado');
             $table->timestamps();
+
+            $table->unique(['tarea_id', 'alumno_id']);
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('entregas');
